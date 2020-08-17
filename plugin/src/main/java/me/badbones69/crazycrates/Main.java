@@ -1,16 +1,20 @@
 package me.badbones69.crazycrates;
 
+import me.badbones69.crazycrates.api.CrateService;
 import me.badbones69.crazycrates.api.CrazyCrates;
 import me.badbones69.crazycrates.api.FileManager;
 import me.badbones69.crazycrates.api.FileManager.Files;
+import me.badbones69.crazycrates.api.KeyService;
 import me.badbones69.crazycrates.api.objects.QuadCrateSession;
 import me.badbones69.crazycrates.commands.CCCommand;
 import me.badbones69.crazycrates.commands.CCTab;
 import me.badbones69.crazycrates.commands.KeyCommand;
 import me.badbones69.crazycrates.commands.KeyTab;
+import me.badbones69.crazycrates.config.DataFileCleaner;
 import me.badbones69.crazycrates.controllers.*;
 import me.badbones69.crazycrates.cratetypes.*;
 import me.badbones69.crazycrates.multisupport.*;
+import me.badbones69.crazycrates.settings.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -22,8 +26,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class Main extends JavaPlugin implements Listener {
     
-    private boolean updateChecker = false;
     private CrazyCrates cc = CrazyCrates.getInstance();
+    private KeyService keyService = KeyService.getInstance();
     private FileManager fileManager = FileManager.getInstance();
     private boolean isEnabled = true;// If the server is supported
     
@@ -71,9 +75,12 @@ public class Main extends JavaPlugin implements Listener {
             Files.DATA.getFile().set("Players.Clear", null);
             Files.DATA.saveFile();
         }
-        updateChecker = !Files.CONFIG.getFile().contains("Settings.Update-Checker") || Files.CONFIG.getFile().getBoolean("Settings.Update-Checker");
+        Settings.getInstance().load();
         //Messages.addMissingMessages(); #Does work but is disabled for now.
-        cc.loadCrates();
+        CrateService.getInstance().loadCrates();
+        DataFileCleaner.getInstance().cleanDataFile();
+        Preview.loadButtons();
+
         PluginManager pm = Bukkit.getPluginManager();
         pm.registerEvents(this, this);
         pm.registerEvents(new GUIMenu(), this);
@@ -125,15 +132,15 @@ public class Main extends JavaPlugin implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
-        cc.setNewPlayerKeys(player);
-        cc.loadOfflinePlayersKeys(player);
+        keyService.setNewPlayerKeys(player);
+        keyService.loadOfflinePlayersKeys(player);
         new BukkitRunnable() {
             @Override
             public void run() {
                 if (player.getName().equals("BadBones69")) {
                     player.sendMessage(Methods.getPrefix() + Methods.color("&7This server is running your Crazy Crates Plugin. " + "&7It is running version &av" + Methods.plugin.getDescription().getVersion() + "&7."));
                 }
-                if (player.isOp() && updateChecker) {
+                if (player.isOp() && Settings.getInstance().updateChecker) {
                     Methods.hasUpdate(player);
                 }
             }

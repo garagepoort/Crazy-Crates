@@ -4,6 +4,7 @@ import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.badbones69.crazycrates.Methods;
 import me.badbones69.crazycrates.api.CrazyCrates;
 import me.badbones69.crazycrates.api.FileManager;
+import me.badbones69.crazycrates.api.KeyService;
 import me.badbones69.crazycrates.api.enums.KeyType;
 import me.badbones69.crazycrates.api.enums.Messages;
 import me.badbones69.crazycrates.api.events.PlayerPrizeEvent;
@@ -31,6 +32,7 @@ import java.util.Random;
 public class Cosmic implements Listener {
     
     private static CrazyCrates cc = CrazyCrates.getInstance();
+    private static KeyService keyService = KeyService.getInstance();
     private static HashMap<Player, ArrayList<Integer>> glass = new HashMap<>();
     private static HashMap<Player, ArrayList<Integer>> picks = new HashMap<>();
     private static HashMap<Player, Boolean> checkHands = new HashMap<>();
@@ -156,7 +158,7 @@ public class Cosmic implements Listener {
                         }
                         if (glass.get(player).size() >= totalPrizes) {
                             KeyType keyType = cc.getPlayerKeyType(player);
-                            if (keyType == KeyType.PHYSICAL_KEY && !cc.hasPhysicalKey(player, crate, checkHands.get(player))) {
+                            if (keyType == KeyType.PHYSICAL_KEY && !keyService.hasPhysicalKey(player, crate, checkHands.get(player))) {
                                 player.closeInventory();
                                 player.sendMessage(Messages.NO_KEY.getMessage());
                                 if (cc.isInOpeningList(player)) {

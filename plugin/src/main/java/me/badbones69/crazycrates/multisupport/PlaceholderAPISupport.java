@@ -1,6 +1,7 @@
 package me.badbones69.crazycrates.multisupport;
 
 import me.badbones69.crazycrates.api.CrazyCrates;
+import me.badbones69.crazycrates.api.KeyService;
 import me.badbones69.crazycrates.api.enums.CrateType;
 import me.badbones69.crazycrates.api.objects.Crate;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
@@ -13,6 +14,7 @@ import java.text.NumberFormat;
 public class PlaceholderAPISupport extends PlaceholderExpansion {
     
     private CrazyCrates cc = CrazyCrates.getInstance();
+    private KeyService keyService = KeyService.getInstance();
     private Plugin plugin;
     
     public PlaceholderAPISupport(Plugin plugin) {
@@ -26,11 +28,11 @@ public class PlaceholderAPISupport extends PlaceholderExpansion {
             for (Crate crate : cc.getCrates()) {
                 if (crate.getCrateType() != CrateType.MENU) {
                     if (identifier.equalsIgnoreCase(crate.getName())) {
-                        return NumberFormat.getNumberInstance().format(cc.getVirtualKeys(playerOnline, crate));
+                        return NumberFormat.getNumberInstance().format(keyService.getVirtualKeys(playerOnline, crate));
                     } else if (identifier.equalsIgnoreCase(crate.getName() + "_physical")) {
-                        return NumberFormat.getNumberInstance().format(cc.getPhysicalKeys(playerOnline, crate));
+                        return NumberFormat.getNumberInstance().format(keyService.getPhysicalKeys(playerOnline, crate));
                     } else if (identifier.equalsIgnoreCase(crate.getName() + "_total")) {
-                        return NumberFormat.getNumberInstance().format(cc.getTotalKeys(playerOnline, crate));
+                        return NumberFormat.getNumberInstance().format(keyService.getTotalKeys(playerOnline, crate));
                     }
                 }
             }

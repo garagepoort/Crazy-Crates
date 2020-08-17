@@ -38,13 +38,13 @@ public class Crate {
     private ItemBuilder boarderItem;
     private CrateType crateType;
     private FileConfiguration file;
-    private ArrayList<Prize> prizes;
+    private List<Prize> prizes;
     private String crateInventoryName;
     private boolean giveNewPlayerKeys;
     private int previewChestlines;
     private int newPlayerKeys;
     private ArrayList<ItemStack> preview;
-    private ArrayList<Tier> tiers;
+    private List<Tier> tiers;
     private CrateHologram hologram;
     private FileManager fileManager = FileManager.getInstance();
     private CrazyCrates cc = CrazyCrates.getInstance();
@@ -57,7 +57,7 @@ public class Crate {
      * @param prizes The prizes that can be won.
      * @param file The crate file.
      */
-    public Crate(String name, String previewName, CrateType crateType, ItemStack key, ArrayList<Prize> prizes, FileConfiguration file, int newPlayerKeys, ArrayList<Tier> tiers, CrateHologram hologram) {
+    public Crate(String name, String previewName, CrateType crateType, ItemStack key, List<Prize> prizes, FileConfiguration file, int newPlayerKeys, List<Tier> tiers, CrateHologram hologram) {
         ItemBuilder itemBuilder = ItemBuilder.convertItemStack(key);
         this.keyNoNBT = itemBuilder.build();
         this.key = itemBuilder.setCrateName(name).build();
@@ -354,7 +354,7 @@ public class Crate {
      * @return A list of all the preview items.
      */
     @SuppressWarnings("unchecked")
-    public ArrayList<ItemStack> getPreviewItems() {
+    public List<ItemStack> getPreviewItems() {
         return (ArrayList<ItemStack>) preview.clone();
     }
     
@@ -424,7 +424,7 @@ public class Crate {
      *
      * @return The prizes in the crate.
      */
-    public ArrayList<Prize> getPrizes() {
+    public List<Prize> getPrizes() {
         return this.prizes;
     }
     
@@ -527,7 +527,7 @@ public class Crate {
      *
      * @return A list of the tiers for the crate. Will be empty if there are none.
      */
-    public ArrayList<Tier> getTiers() {
+    public List<Tier> getTiers() {
         return tiers;
     }
     

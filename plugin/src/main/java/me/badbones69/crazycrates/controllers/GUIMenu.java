@@ -4,11 +4,13 @@ import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.badbones69.crazycrates.Methods;
 import me.badbones69.crazycrates.api.CrazyCrates;
 import me.badbones69.crazycrates.api.FileManager.Files;
+import me.badbones69.crazycrates.api.KeyService;
 import me.badbones69.crazycrates.api.enums.CrateType;
 import me.badbones69.crazycrates.api.enums.KeyType;
 import me.badbones69.crazycrates.api.enums.Messages;
 import me.badbones69.crazycrates.api.objects.Crate;
 import me.badbones69.crazycrates.api.objects.ItemBuilder;
+import me.badbones69.crazycrates.settings.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -27,10 +29,11 @@ import java.util.List;
 public class GUIMenu implements Listener {
     
     private static CrazyCrates cc = CrazyCrates.getInstance();
+    private static KeyService keyService = KeyService.getInstance();
     
     public static void openGUI(Player player) {
-        int size = Files.CONFIG.getFile().getInt("Settings.InventorySize");
-        Inventory inv = Bukkit.createInventory(null, size, Methods.sanitizeColor(Files.CONFIG.getFile().getString("Settings.InventoryName")));
+        int size = Settings.getInstance().inventorySize;
+        Inventory inv = Bukkit.createInventory(null, size, Methods.sanitizeColor(Settings.getInstance().inventoryName));
         if (Files.CONFIG.getFile().contains("Settings.Filler.Toggle")) {
             if (Files.CONFIG.getFile().getBoolean("Settings.Filler.Toggle")) {
                 String id = Files.CONFIG.getFile().getString("Settings.Filler.Item");
@@ -55,9 +58,9 @@ public class GUIMenu implements Listener {
                         i = i.replace("Name:", "");
                         for (Crate crate : cc.getCrates()) {
                             if (crate.getCrateType() != CrateType.MENU) {
-                                i = i.replaceAll("%" + crate.getName().toLowerCase() + "%", cc.getVirtualKeys(player, crate) + "")
-                                .replaceAll("%" + crate.getName().toLowerCase() + "_physical%", cc.getPhysicalKeys(player, crate) + "")
-                                .replaceAll("%" + crate.getName().toLowerCase() + "_total%", cc.getTotalKeys(player, crate) + "");
+                                i = i.replaceAll("%" + crate.getName().toLowerCase() + "%", keyService.getVirtualKeys(player, crate) + "")
+                                .replaceAll("%" + crate.getName().toLowerCase() + "_physical%", keyService.getPhysicalKeys(player, crate) + "")
+                                .replaceAll("%" + crate.getName().toLowerCase() + "_total%", keyService.getTotalKeys(player, crate) + "");
                             }
                         }
                         item.setName(i.replaceAll("%player%", player.getName()));
@@ -68,9 +71,9 @@ public class GUIMenu implements Listener {
                         for (String l : d) {
                             for (Crate crate : cc.getCrates()) {
                                 if (crate.getCrateType() != CrateType.MENU) {
-                                    i = i.replaceAll("%" + crate.getName().toLowerCase() + "%", cc.getVirtualKeys(player, crate) + "")
-                                    .replaceAll("%" + crate.getName().toLowerCase() + "_physical%", cc.getPhysicalKeys(player, crate) + "")
-                                    .replaceAll("%" + crate.getName().toLowerCase() + "_total%", cc.getTotalKeys(player, crate) + "");
+                                    i = i.replaceAll("%" + crate.getName().toLowerCase() + "%", keyService.getVirtualKeys(player, crate) + "")
+                                    .replaceAll("%" + crate.getName().toLowerCase() + "_physical%", keyService.getPhysicalKeys(player, crate) + "")
+                                    .replaceAll("%" + crate.getName().toLowerCase() + "_total%", keyService.getTotalKeys(player, crate) + "");
                                 }
                             }
                             item.addLore(i.replaceAll("%player%", player.getName()));
@@ -110,9 +113,9 @@ public class GUIMenu implements Listener {
                     .setCrateName(crate.getName())
                     .setPlayer(file.getString(path + "Player"))
                     .setGlowing(file.getBoolean(path + "Glowing"))
-                    .addLorePlaceholder("%Keys%", NumberFormat.getNumberInstance().format(cc.getVirtualKeys(player, crate)))
-                    .addLorePlaceholder("%Keys_Physical%", NumberFormat.getNumberInstance().format(cc.getPhysicalKeys(player, crate)))
-                    .addLorePlaceholder("%Keys_Total%", NumberFormat.getNumberInstance().format(cc.getTotalKeys(player, crate)))
+                    .addLorePlaceholder("%Keys%", NumberFormat.getNumberInstance().format(keyService.getVirtualKeys(player, crate)))
+                    .addLorePlaceholder("%Keys_Physical%", NumberFormat.getNumberInstance().format(keyService.getPhysicalKeys(player, crate)))
+                    .addLorePlaceholder("%Keys_Total%", NumberFormat.getNumberInstance().format(keyService.getTotalKeys(player, crate)))
                     .addLorePlaceholder("%Player%", player.getName())
                     .build());
                 }
@@ -160,7 +163,7 @@ public class GUIMenu implements Listener {
                                 if (cc.getVirtualKeys(player, crate) >= 1) {
                                     hasKey = true;
                                 } else {
-                                    if (Files.CONFIG.getFile().getBoolean("Settings.Virtual-Accepts-Physical-Keys") && cc.hasPhysicalKey(player, crate, false)) {
+                                    if (Files.CONFIG.getFile().getBoolean("Settings.Virtual-Accepts-Physical-Keys") && keyService.hasPhysicalKey(player, crate, false)) {
                                         hasKey = true;
                                         keyType = KeyType.PHYSICAL_KEY;
                                     }

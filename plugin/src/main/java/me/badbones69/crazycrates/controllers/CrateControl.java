@@ -2,7 +2,6 @@ package me.badbones69.crazycrates.controllers;
 
 import me.badbones69.crazycrates.Methods;
 import me.badbones69.crazycrates.api.CrazyCrates;
-import me.badbones69.crazycrates.api.FileManager.Files;
 import me.badbones69.crazycrates.api.enums.CrateType;
 import me.badbones69.crazycrates.api.enums.KeyType;
 import me.badbones69.crazycrates.api.enums.Messages;
@@ -11,12 +10,12 @@ import me.badbones69.crazycrates.api.objects.Crate;
 import me.badbones69.crazycrates.api.objects.CrateLocation;
 import me.badbones69.crazycrates.cratetypes.QuickCrate;
 import me.badbones69.crazycrates.multisupport.Version;
+import me.badbones69.crazycrates.settings.Settings;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -59,7 +58,6 @@ public class CrateControl implements Listener { //Crate Control
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onCrateOpen(PlayerInteractEvent e) {
         Player player = e.getPlayer();
-        FileConfiguration config = Files.CONFIG.getFile();
         if (Version.getCurrentVersion().isNewer(Version.v1_8_R3) && e.getHand() == EquipmentSlot.OFF_HAND) {
             if (cc.isKey(player.getInventory().getItemInOffHand())) {
                 e.setCancelled(true);
@@ -126,7 +124,7 @@ public class CrateControl implements Listener { //Crate Control
                         hasKey = true;
                         isPhysical = true;
                     }
-                    if (config.getBoolean("Settings.Physical-Accepts-Virtual-Keys") && cc.getVirtualKeys(player, crate) >= 1) {
+                    if (Settings.getInstance().acceptsVirtualKeys && cc.getVirtualKeys(player, crate) >= 1) {
                         hasKey = true;
                     }
                     if (hasKey) {
@@ -159,11 +157,11 @@ public class CrateControl implements Listener { //Crate Control
                         cc.openCrate(player, crate, keyType, crateLocation.getLocation(), false, true);
                     } else {
                         if (crate.getCrateType() != CrateType.CRATE_ON_THE_GO) {
-                            if (config.getBoolean("Settings.KnockBack")) {
+                            if (Settings.getInstance().knockBack) {
                                 knockBack(player, clickedBlock.getLocation());
                             }
-                            if (config.contains("Settings.Need-Key-Sound")) {
-                                Sound sound = Sound.valueOf(config.getString("Settings.Need-Key-Sound"));
+                            if (Settings.getInstance().needKeySound != null) {
+                                Sound sound = Sound.valueOf(Settings.getInstance().needKeySound);
                                 if (sound != null) {
                                     player.playSound(player.getLocation(), sound, 1f, 1f);
                                 }

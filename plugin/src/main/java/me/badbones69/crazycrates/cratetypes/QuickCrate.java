@@ -3,6 +3,7 @@ package me.badbones69.crazycrates.cratetypes;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.badbones69.crazycrates.Methods;
 import me.badbones69.crazycrates.api.CrazyCrates;
+import me.badbones69.crazycrates.api.KeyService;
 import me.badbones69.crazycrates.api.enums.KeyType;
 import me.badbones69.crazycrates.api.events.PlayerPrizeEvent;
 import me.badbones69.crazycrates.api.objects.Crate;
@@ -31,16 +32,17 @@ public class QuickCrate implements Listener {
     public static ArrayList<Entity> allRewards = new ArrayList<>();
     public static HashMap<Player, Entity> rewards = new HashMap<>();
     private static CrazyCrates cc = CrazyCrates.getInstance();
+    private static KeyService keyService = KeyService.getInstance();
     private static HashMap<Player, BukkitTask> tasks = new HashMap<>();
     
     public static void openCrate(final Player player, final Location loc, Crate crate, KeyType keyType) {
         int keys;// If the key is free it is set to one.
         switch (keyType) {
             case VIRTUAL_KEY:
-                keys = cc.getVirtualKeys(player, crate);
+                keys = keyService.getVirtualKeys(player, crate);
                 break;
             case PHYSICAL_KEY:
-                keys = cc.getPhysicalKeys(player, crate);
+                keys = keyService.getPhysicalKeys(player, crate);
                 break;
             default:
                 keys = 1;

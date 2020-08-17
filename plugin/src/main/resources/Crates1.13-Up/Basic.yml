@@ -4,7 +4,7 @@ Crate:
   #Name of the Inventory if a GUI crate.
   CrateName: '&8Basic Crate'
   #The name of the inventory that will be in the preview GUI.
-  Preview-Name: '&8Basic Crate Preview'
+  Preview-Name: '8&Basic Crate Preview'
   #Starting amount of keys when the player 1st joins.
   StartingKeys: 0
   #If the crate shows in the /cc GUI. (If the crate type is QuickCrate/CrateOnTheGo/FireCracker then the Crate will not work. Quick Crate requires a Physical Crate.)

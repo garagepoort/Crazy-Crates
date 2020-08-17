@@ -2,12 +2,12 @@ package me.badbones69.crazycrates;
 
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.badbones69.crazycrates.api.CrazyCrates;
-import me.badbones69.crazycrates.api.FileManager.Files;
 import me.badbones69.crazycrates.api.enums.Messages;
 import me.badbones69.crazycrates.api.objects.Crate;
 import me.badbones69.crazycrates.api.objects.ItemBuilder;
 import me.badbones69.crazycrates.controllers.FireworkDamageEvent;
 import me.badbones69.crazycrates.multisupport.Version;
+import me.badbones69.crazycrates.settings.Settings;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
 import org.bukkit.command.CommandSender;
@@ -132,11 +132,11 @@ public class Methods {
     }
     
     public static String getPrefix() {
-        return color(Files.CONFIG.getFile().getString("Settings.Prefix"));
+        return color(Settings.getInstance().prefix);
     }
     
     public static String getPrefix(String msg) {
-        return color(Files.CONFIG.getFile().getString("Settings.Prefix") + msg);
+        return color(Settings.getInstance().prefix + msg);
     }
     
     public static List<Location> getLocations(String shem, Location loc) {

@@ -8,6 +8,7 @@ import me.badbones69.crazycrates.api.enums.QuadCrateParticles;
 import me.badbones69.crazycrates.controllers.ParticleEffect;
 import me.badbones69.crazycrates.multisupport.Version;
 import me.badbones69.crazycrates.multisupport.nms.NMSSupport;
+import me.badbones69.crazycrates.settings.Settings;
 import org.bukkit.*;
 import org.bukkit.Particle.DustOptions;
 import org.bukkit.block.Block;
@@ -191,7 +192,7 @@ public class QuadCrateSession {
                 endCrateForce(true);
                 player.sendMessage(Messages.OUT_OF_TIME.getMessage());
             }
-        }.runTaskLater(cc.getPlugin(), cc.getQuadCrateTimer()));
+        }.runTaskLater(cc.getPlugin(), Settings.getInstance().quadCrateTimer));
         return true;
     }
     
