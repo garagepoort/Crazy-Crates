@@ -25,7 +25,6 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
@@ -467,42 +466,6 @@ public class CrazyCrates {
             }
         }
         return null;
-    }
-
-    /**
-     * Load the crate preview of a crate.
-     *
-     * @param crate The crate you wish to load the preview of.
-     * @return An Inventory object of the preview.
-     */
-    public Inventory loadPreview(Crate crate) {
-        FileConfiguration file = crate.getFile();
-        int slots = 9;
-        for (int size = file.getConfigurationSection("Crate.Prizes").getKeys(false).size(); size > 9 && slots < crate.getMaxSlots(); size -= 9) {
-            slots += 9;
-        }
-        Inventory inv = Bukkit.createInventory(null, slots, Methods.sanitizeColor(file.getString("Crate.Name")));
-        for (String reward : file.getConfigurationSection("Crate.Prizes").getKeys(false)) {
-            String id = file.getString("Crate.Prizes." + reward + ".DisplayItem", "Stone");
-            String name = file.getString("Crate.Prizes." + reward + ".DisplayName", "");
-            List<String> lore = file.getStringList("Crate.Prizes." + reward + ".Lore");
-            HashMap<Enchantment, Integer> enchantments = new HashMap<>();
-            String player = file.getString("Crate.Prizes." + reward + ".Player", "");
-            boolean glowing = file.getBoolean("Crate.Prizes." + reward + ".Glowing");
-            int amount = file.getInt("Crate.Prizes." + reward + ".DisplayAmount", 1);
-            for (String enchantmentName : file.getStringList("Crate.Prizes." + reward + ".DisplayEnchantments")) {
-                Enchantment enchantment = Methods.getEnchantment(enchantmentName.split(":")[0]);
-                if (enchantment != null) {
-                    enchantments.put(enchantment, Integer.parseInt(enchantmentName.split(":")[1]));
-                }
-            }
-            try {
-                inv.setItem(inv.firstEmpty(), new ItemBuilder().setMaterial(id).setAmount(amount).setName(name).setLore(lore).setEnchantments(enchantments).setGlowing(glowing).setPlayer(player).build());
-            } catch (Exception e) {
-                inv.addItem(new ItemBuilder().setMaterial("RED_TERRACOTTA", "STAINED_CLAY:14").setName("&c&lERROR").setLore(Arrays.asList("&cThere is an error", "&cFor the reward: &c" + reward)).build());
-            }
-        }
-        return inv;
     }
 
     /**

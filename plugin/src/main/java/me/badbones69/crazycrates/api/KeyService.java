@@ -58,18 +58,21 @@ public class KeyService {
      * @param player The player that has just joined.
      */
     public void setNewPlayerKeys(Player player) {
-        if (CrateConfigurationParser.getInstance().isGiveNewPlayersKeys()) {// Checks if any crate gives new players keys and if not then no need to do all this stuff.
-            String uuid = player.getUniqueId().toString();
-            if (player.hasPlayedBefore()) {
-                List<Crate> crates = CrateService.getInstance().getCrates();
-                for (Crate crate : crates) {
-                    if (crate.doNewPlayersGetKeys()) {
-                        FileManager.Files.DATA.getFile().set("Players." + uuid + "." + crate, crate.getNewPlayerKeys());
-                    }
-                }
-                FileManager.Files.DATA.saveFile();
-            }
+
+        if (!CrateConfigurationParser.getInstance().isGiveNewPlayersKeys()) {
+            //No keys for new players
+            return;
         }
+        String uuid = player.getUniqueId().toString();
+        if (player.hasPlayedBefore()) {
+            CrateService.getInstance().getCrates().stream()
+                    .filter(Crate::doNewPlayersGetKeys)
+                    .forEach(crate -> {
+                        FileManager.Files.DATA.getFile().set("Players." + uuid + "." + crate, crate.getNewPlayerKeys());
+                    });
+            FileManager.Files.DATA.saveFile();
+        }
+
     }
 
     /**
