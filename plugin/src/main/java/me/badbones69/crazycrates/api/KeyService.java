@@ -67,9 +67,7 @@ public class KeyService {
         if (player.hasPlayedBefore()) {
             CrateService.getInstance().getCrates().stream()
                     .filter(Crate::doNewPlayersGetKeys)
-                    .forEach(crate -> {
-                        FileManager.Files.DATA.getFile().set("Players." + uuid + "." + crate, crate.getNewPlayerKeys());
-                    });
+                    .forEach(crate -> FileManager.Files.DATA.getFile().set("Players." + uuid + "." + crate, crate.getNewPlayerKeys()));
             FileManager.Files.DATA.saveFile();
         }
 
